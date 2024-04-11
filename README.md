@@ -1,0 +1,2 @@
+# LegalDigest
+NLP Project Repository
