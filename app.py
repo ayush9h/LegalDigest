@@ -48,30 +48,41 @@ if pdf_file and groq_api_key:
             [page.extract_text() for page in pdf.pages if page.extract_text()]
         )
 
-    st.subheader("Full Document Summary")
-    summarized_document = ""
     try:
         summarized_document = summarize_with_groq(full_text, api_key=groq_api_key)
         st.success("Document summarized successfully.")
-        st.write(summarized_document)
     except Exception as e:
         st.error(f"Error summarizing with Groq: {str(e)}")
+        summarized_document = ""
 
     summary_articles = summarize_with_local_model(summarized_document)
-    st.write(summary_articles)
 
     ipc_sections = list(set(re.findall(r"Sections? (\d+[A-Z]?)", summarized_document)))
     ipc_df = pd.read_csv("./datasets/IPC.csv")
     ipc_df["SectionNumber"] = ipc_df["IPC_Section"].str.extract(r"(\d+[A-Z]?)")
 
-    st.subheader("Summary Based on IPC Sections")
-
+    ipc_summaries = {}
     for section in ipc_sections:
         match = ipc_df[ipc_df["SectionNumber"] == section]
         if not match.empty:
             desc = match["Description"].values[0]
             summary = summarize_with_local_model(desc)
-            st.markdown(f"**Section {section}**")
-            st.write(summary)
+            ipc_summaries[section] = summary
         else:
-            st.markdown(f"**Section {section}** - not found in IPC.csv")
+            ipc_summaries[section] = "Not found in IPC.csv"
+
+    st.subheader("Summary Comparison")
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("### Groq Summary")
+        st.write(summarized_document)
+
+    with col2:
+        st.markdown("### IPC Section Summaries")
+        if ipc_summaries:
+            for section in sorted(ipc_summaries.keys()):
+                with st.expander(f"Section {section}"):
+                    st.write(ipc_summaries[section])
+        else:
+            st.warning("No IPC sections detected in the summary.")
