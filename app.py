@@ -36,8 +36,8 @@ def summarize_with_local_model(text, max_input_length=512, max_output_length=128
     outputs = local_model.generate(inputs["input_ids"], max_length=max_output_length)
     return tokenizer.decode(outputs[0], skip_special_tokens=True)
 
-st.set_page_config(page_title="Legal PDF Analyzer", layout="wide")
-st.title("Legal PDF Analyzer")
+st.set_page_config(page_title="Legal Digest", layout="wide")
+st.title("Legal Digest")
 
 groq_api_key = st.text_input("Enter your Groq API Key", type="password")
 pdf_file = st.file_uploader("Upload a Legal PDF", type=["pdf"])
@@ -71,11 +71,11 @@ if pdf_file and groq_api_key:
         else:
             ipc_summaries[section] = "Not found in IPC.csv"
 
-    st.subheader("Summary Comparison")
+    st.subheader("Summary")
     col1, col2 = st.columns(2)
 
     with col1:
-        st.markdown("### Groq Summary")
+        st.markdown("### Document Summary")
         st.write(summarized_document)
 
     with col2:
