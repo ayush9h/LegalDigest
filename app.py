@@ -1,5 +1,6 @@
 import re
 
+import pandas as pd
 import pdfplumber
 import streamlit as st
 from groq import Groq
@@ -58,5 +59,19 @@ if pdf_file and groq_api_key:
 
     summary_articles = summarize_with_local_model(summarized_document)
     st.write(summary_articles)
-    summary_articles = summarize_with_local_model(summarized_document)
-    st.write(summary_articles)
+
+    ipc_sections = list(set(re.findall(r"Sections? (\d+[A-Z]?)", summarized_document)))
+    ipc_df = pd.read_csv("./datasets/IPC.csv")
+    ipc_df["SectionNumber"] = ipc_df["IPC_Section"].str.extract(r"(\d+[A-Z]?)")
+
+    st.subheader("Summary Based on IPC Sections")
+
+    for section in ipc_sections:
+        match = ipc_df[ipc_df["SectionNumber"] == section]
+        if not match.empty:
+            desc = match["Description"].values[0]
+            summary = summarize_with_local_model(desc)
+            st.markdown(f"**Section {section}**")
+            st.write(summary)
+        else:
+            st.markdown(f"**Section {section}** - not found in IPC.csv")
