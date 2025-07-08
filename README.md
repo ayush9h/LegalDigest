@@ -1,10 +1,9 @@
 # LegalDigest
 
-Repository contains the codes for NLP Text preprocessing directory of legal case documents.
+Repository contains the codes for Legal Digest
 
-The code works on **IN-Ext judgement** directory present in the below link
-
-**Download dataset at**: [Dataset Link](https://zenodo.org/records/7152317#.Yz6mJ9JByC0)
+- Summary generation of articles mentioned in the legal document.
+- Seq2Seq model finetuned for summarization on the IPC Sections datasets
 
 # Screenshots
 ![Interface](https://github.com/ayush9h/LegalDigest/blob/main/Screenshots/streamlit-1.png)
