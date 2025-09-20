@@ -14,13 +14,18 @@ def format_train_data(data):
 
     return {
         "input_ids": tokenizer(
-            prompt, padding="max_length", truncation=True, max_length=MAX_LENGTH
+            prompt,
+            padding="max_length",
+            truncation=True,
+            max_length=MAX_LENGTH,
+            return_tensors="pt",
         ).input_ids,
-        "attention_mask": tokenizer(
-            prompt, padding="max_length", truncation=True, max_length=MAX_LENGTH
-        ).attention_mask,
         "labels": tokenizer(
-            data["output"], padding="max_length", truncation=True, max_length=MAX_LENGTH
+            data["output"],
+            padding="max_length",
+            truncation=True,
+            max_length=MAX_LENGTH,
+            return_tensors="pt",
         ).input_ids,
     }
 
