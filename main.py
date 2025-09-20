@@ -1,5 +1,4 @@
-import torch
+from src.train import train
 
-from scripts.fine_tune import finetune_flan
-
-finetune_flan()
+if __name__ == "__main__":
+    train()
