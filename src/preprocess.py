@@ -1,7 +1,7 @@
 from datasets import load_dataset
 from transformers import AutoTokenizer
 
-from config import BASE_MODEL, DATA_FILE, MAX_LENGTH
+from src.config import BASE_MODEL, DATA_FILE, MAX_LENGTH
 
 tokenizer = AutoTokenizer.from_pretrained(BASE_MODEL)
 

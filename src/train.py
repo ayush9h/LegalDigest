@@ -1,10 +1,24 @@
-from transformers import (DataCollatorForSeq2Seq, Seq2SeqTrainer,
-                          Seq2SeqTrainingArguments)
+import os
 
-from config import (BATCH_SIZE, DEVICE, GRAD_ACCUM_STEPS, LEARNING_RATE,
-                    LOGGING_DIR, NUM_EPOCHS, OUTPUT_DIR)
+import pandas as pd
+from transformers import (
+    DataCollatorForSeq2Seq,
+    Seq2SeqTrainer,
+    Seq2SeqTrainingArguments,
+)
+
+from src.config import (
+    BATCH_SIZE,
+    GRAD_ACCUM_STEPS,
+    LEARNING_RATE,
+    LOGGING_DIR,
+    NUM_EPOCHS,
+    OUTPUT_DIR,
+)
 from src.model import get_model
 from src.preprocess import load_and_tokenize, tokenizer
+
+os.makedirs("./logs", exist_ok=True)
 
 
 def train():
@@ -21,7 +35,6 @@ def train():
         num_train_epochs=NUM_EPOCHS,
         logging_steps=10,
         save_strategy="epoch",
-        report_to=["tensorboard", "csv"],
         fp16=False,
     )
 
@@ -29,9 +42,12 @@ def train():
         model=model,
         args=training_args,
         train_dataset=dataset,
-        tokenizer=tokenizer,
         data_collator=data_collator,
     )
 
     trainer.train()
+
+    log_df = pd.DataFrame(trainer.state.log_history)
+    log_df.to_csv("./logs/training_log.csv", index=False)
+
     model.save_pretrained(OUTPUT_DIR)
