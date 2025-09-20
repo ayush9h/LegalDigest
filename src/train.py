@@ -1,18 +1,8 @@
-from transformers import (
-    DataCollatorForSeq2Seq,
-    Seq2SeqTrainer,
-    Seq2SeqTrainingArguments,
-)
+from transformers import (DataCollatorForSeq2Seq, Seq2SeqTrainer,
+                          Seq2SeqTrainingArguments)
 
-from config import (
-    BATCH_SIZE,
-    DEVICE,
-    GRAD_ACCUM_STEPS,
-    LEARNING_RATE,
-    LOGGING_DIR,
-    NUM_EPOCHS,
-    OUTPUT_DIR,
-)
+from config import (BATCH_SIZE, DEVICE, GRAD_ACCUM_STEPS, LEARNING_RATE,
+                    LOGGING_DIR, NUM_EPOCHS, OUTPUT_DIR)
 from src.model import get_model
 from src.preprocess import load_and_tokenize, tokenizer
 

@@ -1,7 +1,8 @@
 from peft import LoraConfig, get_peft_model
 from transformers import AutoModelForSeq2SeqLM, BitsAndBytesConfig
 
-from config import BASE_MODEL, DEVICE, LORA_ALPHA, LORA_DROPOUT, LORA_R, TARGET_MODULES
+from config import (BASE_MODEL, DEVICE, LORA_ALPHA, LORA_DROPOUT, LORA_R,
+                    TARGET_MODULES)
 
 
 def get_model():
