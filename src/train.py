@@ -41,7 +41,8 @@ def train():
     trainer = Seq2SeqTrainer(
         model=model,
         args=training_args,
-        train_dataset=dataset,
+        train_dataset=dataset["train"],
+        eval_dataset = dataset["test"],
         data_collator=data_collator,
     )
 

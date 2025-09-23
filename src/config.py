@@ -7,7 +7,7 @@ DATA_FILE = "data/ipc.jsonl"
 OUTPUT_DIR = "checkpoints/flan-t5-ipc"
 LOGGING_DIR = "logs"
 
-LEARNING_RATE = 1e-4
+LEARNING_RATE = 1e-5
 BATCH_SIZE = 1
 GRAD_ACCUM_STEPS = 2
 NUM_EPOCHS = 5

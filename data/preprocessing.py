@@ -15,7 +15,7 @@ if "Unnamed: 0" in df.columns:
 records = []
 for _, row in df.iterrows():
 
-    instruction = f"Explain {row["IPC_Section"]}"
+    instruction = f"{row["IPC_Section"]}"
     parts = []
     if pd.notna(row["Offense"]):
         parts.append(f"Offense: {row['Offense']}")
