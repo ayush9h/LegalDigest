@@ -1,6 +1,6 @@
 # LegalDigest
 
-LegalDigest project utilizes a fine-tuned sequence-to-sequence model based on Google's FLAN-T5-Small architecture, specifically trained on Indian Penal Code (IPC) sections dataset.
+LegalDigest project utilizes a fine-tuned sequence-to-sequence model based on Google's FLAN-T5-Small architecture, specifically trained on Indian Penal Code (IPC) sections dataset. This repository contains a smaller-scale, reproducible version of the project.
 
 ## Features
 
