@@ -24,6 +24,7 @@ cd LegalDigest
 2. Install dependencies:
 ```bash
 pip install -r requirements.txt
+pip install torch torchvision --index-url https://download.pytorch.org/whl/cu126
 ```
 
 3. Download or prepare your legal dataset (IPC sections format recommended)

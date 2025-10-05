@@ -1,5 +1,5 @@
 from peft import LoraConfig, get_peft_model
-from transformers import AutoModelForSeq2SeqLM, BitsAndBytesConfig
+from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, BitsAndBytesConfig
 
 from src.config import (
     BASE_MODEL,
@@ -7,6 +7,7 @@ from src.config import (
     LORA_ALPHA,
     LORA_DROPOUT,
     LORA_R,
+    MODEL_TYPE,
     TARGET_MODULES,
 )
 
@@ -17,7 +18,7 @@ def get_model():
         lora_alpha=LORA_ALPHA,
         lora_dropout=LORA_DROPOUT,
         target_modules=TARGET_MODULES,
-        task_type="SEQ_2_SEQ_LM",
+        task_type="CAUSAL_LM" if MODEL_TYPE == "causal" else "SEQ_2_SEQ_LM",
     )
 
     bnb_config = BitsAndBytesConfig(
@@ -27,17 +28,20 @@ def get_model():
         bnb_4bit_use_double_quant=True,
     )
 
-    model = AutoModelForSeq2SeqLM.from_pretrained(
-        BASE_MODEL,
-        quantization_config=bnb_config,
-        device_map="auto",
-    )
+    if MODEL_TYPE == "causal":
+        model = AutoModelForCausalLM.from_pretrained(
+            BASE_MODEL,
+            quantization_config=bnb_config,
+            device_map="auto",
+        )
+    else:
+        model = AutoModelForSeq2SeqLM.from_pretrained(
+            BASE_MODEL,
+            quantization_config=bnb_config,
+            device_map="auto",
+        )
 
-    model = get_peft_model(
-        model,
-        peft_config,
-    )
-
+    model = get_peft_model(model, peft_config)
     model.to(DEVICE)
 
     return model
