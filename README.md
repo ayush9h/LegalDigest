@@ -10,7 +10,8 @@ LegalDigest project utilizes a fine-tuned sequence-to-sequence model based on Go
 
 
 # Screenshots
-![Loss](https://github.com/ayush9h/LegalDigest/blob/main/logs/training_loss.png)
+![Loss](https://github.com/ayush9h/LegalDigest/blob/main/logs/training_loss_seq2seq.png)
+![Loss](https://github.com/ayush9h/LegalDigest/blob/main/logs/training_loss_causal.png)
 
 
 ## Installation
