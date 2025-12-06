@@ -1,6 +1,6 @@
 # LegalDigest
 
-LegalDigest for legal text understanding, built using **parameter-efficient fine-tuning (LoRA)**. The project focuses on **Indian Penal Code (IPC)** data and supports **both sequence-to-sequence and causal language models**.
+LegalDigest for legal text understanding, built using **parameter-efficient fine-tuning (LoRA)**. The project focuses on **Indian Penal Code (IPC)** data and supports **both sequence-to-sequence and causal language models**. This repository contains a smaller-scale, reproducible version of the project.
 
 ---
 ## Training Results
