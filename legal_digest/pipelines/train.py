@@ -1,9 +1,17 @@
 from pathlib import Path
 
 import torch
-from transformers import DataCollatorForSeq2Seq, Trainer, TrainingArguments
+from transformers import (
+    DataCollatorForLanguageModeling,
+    DataCollatorForSeq2Seq,
+    Seq2SeqTrainer,
+    Seq2SeqTrainingArguments,
+    Trainer,
+    TrainingArguments,
+)
 
 from legal_digest.config import load_config
+from legal_digest.core.dataset import LegalDataset
 from legal_digest.core.model import ModelWrapper
 
 
@@ -14,14 +22,9 @@ def train(model: str):
     model_obj = wrapper.model
     tokenizer = wrapper.tokenizer
 
-    examples = [
-        {
-            "input": "Explain IPC Section 420",
-            "target": "Section 420 deals with cheating and dishonestly inducing delivery of property.",
-        }
-    ]
+    dataset = LegalDataset(cfg.data.processed_train)
 
-    class LegalDatasetLoader(torch.utils.data.Dataset):
+    class LegalTrainDataLoader(torch.utils.data.Dataset):
         def __init__(self, data, tokenizer, max_len):
             self.data = data
             self.tokenizer = tokenizer
@@ -34,7 +37,7 @@ def train(model: str):
             item = self.data[idx]
 
             model_inputs = self.tokenizer(
-                item["input"],
+                item["prompt"],
                 truncation=True,
                 padding="max_length",
                 max_length=self.max_len,
@@ -50,13 +53,24 @@ def train(model: str):
             model_inputs["labels"] = labels
             return model_inputs
 
-    train_dataset = LegalDatasetLoader(
-        examples,
+    train_dataset = LegalTrainDataLoader(
+        dataset,
         tokenizer,
         cfg.training.max_length,
     )
+    if cfg.model.active.model_type == "seq2seq":
+        collator = DataCollatorForSeq2Seq(
+            tokenizer,
+            model=model_obj,
+        )
+        args_cls = Seq2SeqTrainingArguments
+        trainer_cls = Seq2SeqTrainer
+    else:
+        collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
+        args_cls = TrainingArguments
+        trainer_cls = Trainer
 
-    args = TrainingArguments(
+    args = args_cls(
         output_dir=cfg.model.active.output_dir,
         num_train_epochs=cfg.training.num_epochs,
         per_device_train_batch_size=cfg.training.batch_size,
@@ -69,15 +83,9 @@ def train(model: str):
         bf16=cfg.training.bf16,
         save_strategy=cfg.training.save_strategy,
         save_total_limit=cfg.training.save_total_limit,
-        report_to="none",
     )
 
-    collator = DataCollatorForSeq2Seq(
-        tokenizer,
-        model=model_obj,
-    )
-
-    trainer = Trainer(
+    trainer = trainer_cls(
         model=model_obj,
         args=args,
         train_dataset=train_dataset,
@@ -89,3 +97,22 @@ def train(model: str):
     save_dir = Path(cfg.model.active.output_dir) / cfg.model.version
     save_dir.mkdir(parents=True, exist_ok=True)
     wrapper.save(save_dir)
+
+
+import sys
+
+
+def main():
+    if len(sys.argv) != 2:
+        raise SystemExit(
+            "Usage: legal-digest-train <model>\n"
+            "Example: legal-digest-train flan_t5\n"
+            "         legal-digest-train llama"
+        )
+
+    model = sys.argv[1]
+    train(model)
+
+
+if __name__ == "__main__":
+    main()
