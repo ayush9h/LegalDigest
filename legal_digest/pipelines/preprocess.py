@@ -74,7 +74,6 @@ def run_preprocess() -> None:
         if pd.notna(row["Court"]):
             parts.append(f"Court: {clean(row['Court'])}")
 
-        # Description + joined attributes
         description = clean(row["Description"])
         output_text = (description + " " + " ".join(parts)).strip()
 
@@ -98,7 +97,6 @@ def run_preprocess() -> None:
 
 
 def main() -> None:
-    """Entry point for `python -m legal_digest.pipelines.preprocess`."""
     try:
         run_preprocess()
     except Exception as e:

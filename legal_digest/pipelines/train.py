@@ -1,14 +1,9 @@
 from pathlib import Path
 
 import torch
-from transformers import (
-    DataCollatorForLanguageModeling,
-    DataCollatorForSeq2Seq,
-    Seq2SeqTrainer,
-    Seq2SeqTrainingArguments,
-    Trainer,
-    TrainingArguments,
-)
+from transformers import (DataCollatorForLanguageModeling,
+                          DataCollatorForSeq2Seq, Seq2SeqTrainer,
+                          Seq2SeqTrainingArguments, Trainer, TrainingArguments)
 
 from legal_digest.config import load_config
 from legal_digest.core.dataset import LegalDataset

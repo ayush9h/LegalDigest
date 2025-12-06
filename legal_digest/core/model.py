@@ -1,5 +1,6 @@
 from peft import LoraConfig, get_peft_model
-from transformers import AutoModelForCausalLM, AutoModelForSeq2SeqLM, AutoTokenizer
+from transformers import (AutoModelForCausalLM, AutoModelForSeq2SeqLM,
+                          AutoTokenizer)
 
 
 class ModelWrapper:
@@ -17,14 +18,12 @@ class ModelWrapper:
         if mcfg.model_type == "seq2seq":
             base_model = AutoModelForSeq2SeqLM.from_pretrained(
                 mcfg.base_model,
-                trust_remote_code=True,
             )
             task_type = "SEQ_2_SEQ_LM"
 
         elif mcfg.model_type == "causal":
             base_model = AutoModelForCausalLM.from_pretrained(
                 mcfg.base_model,
-                trust_remote_code=True,
             )
             task_type = "CAUSAL_LM"
 
