@@ -1,0 +1,15 @@
+training:
+  learning_rate: 1.0e-5           
+  weight_decay: 0.01
+  batch_size: 1
+  grad_accum_steps: 2             
+  num_epochs: 1                   
+  max_length: 512                 
+  fp16: true  
+  bf16: false 
+  save_strategy: "epoch"
+  save_total_limit: 2
+
+logging:
+  dir: "logs"
+  steps: 10
