@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "legal-digest"
+version = "0.0.1"
+description = "Training and inference pipeline for legal text summarization"
+readme = "README.md"
+requires-python = ">=3.10"
+
+authors = [
+  { name = "Ayush Kumar", email = "ayush.kumar.21cse@bmu.edu.in" }
+]
+
+keywords = ["nlp", "legal", "summarization", "llm", "lora"]
+
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Intended Audience :: Developers",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence"
+]
+
+[project.dependencies]
+torch = ">=2.1"
+transformers = ">=4.38"
+peft = ">=0.10.0"
+accelerate = ">=0.26"
+datasets = ">=2.16"
+
+fastapi = ">=0.110"
+uvicorn = { version = ">=0.27", extras = ["standard"] }
+pydantic = ">=2.6"
+
+omegaconf = ">=2.3"
+loguru = ">=0.7"
+numpy = ">=1.26"
+pandas = ">=2.1"
+
+scikit-learn = ">=1.3"
+matplotlib = ">=3.8"
+
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.0",
+  "pytest-cov>=4.1",
+  "ruff>=0.3",
+  "black>=24.2",
+  "mypy>=1.8",
+]
+
+ci = [
+  "ruff",
+  "black",
+]
+
+data = [
+  "dvc>=3.38",
+]
