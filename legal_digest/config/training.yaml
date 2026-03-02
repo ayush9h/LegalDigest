@@ -4,7 +4,7 @@ model:
   max_target_length: 512
 
 training:
-  learning_rate: 0.0003
+  learning_rate: 0.003
   train_batch_size: 8
   eval_batch_size: 4
   weight_decay: 0.01

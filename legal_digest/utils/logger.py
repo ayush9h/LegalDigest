@@ -1,46 +1,38 @@
 import logging
 import sys
-from logging.handlers import RotatingFileHandler
-from pathlib import Path
-
-LOG_FORMAT = "[%(asctime)s] " "[%(levelname)s] " "%(name)s " "- %(message)s"
-
-DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 
-def setup_logger(
-    name: str,
-    log_dir: str,
-    level: int = logging.INFO,
-    max_bytes: int = 10 * 1024 * 1024,
-    backup_count: int = 5,
-) -> logging.Logger:
+class LoggerFormatter(logging.Formatter):
+    grey = "\x1b[38;20m"
+    green = "\x1b[32;20m"
+    yellow = "\x1b[33;20m"
+    red = "\x1b[31;20m"
+    bold_red = "\x1b[31;1m"
+    reset = "\x1b[0m"
 
-    Path(log_dir).mkdir(parents=True, exist_ok=True)
-
-    logger = logging.getLogger(name)
-    logger.setLevel(level)
-
-    if logger.handlers:
-        return logger
-
-    formatter = logging.Formatter(LOG_FORMAT, DATE_FORMAT)
-
-    console_handler = logging.StreamHandler(sys.stdout)
-    console_handler.setLevel(level)
-    console_handler.setFormatter(formatter)
-
-    file_handler = RotatingFileHandler(
-        filename=Path(log_dir) / f"{name}.log",
-        maxBytes=max_bytes,
-        backupCount=backup_count,
-        encoding="utf-8",
+    format_str = (
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s (%(filename)s:%(lineno)d)"
     )
-    file_handler.setLevel(level)
-    file_handler.setFormatter(formatter)
 
-    logger.addHandler(console_handler)
-    logger.addHandler(file_handler)
+    FORMATS = {
+        logging.DEBUG: grey + format_str + reset,
+        logging.INFO: green + format_str + reset,
+        logging.WARNING: yellow + format_str + reset,
+        logging.ERROR: red + format_str + reset,
+        logging.CRITICAL: bold_red + format_str + reset,
+    }
 
-    logger.propagate = False
-    return logger
+    def format(self, record):
+        log_fmt = self.FORMATS.get(
+            record.levelno, self.grey + self.format_str + self.reset
+        )
+        formatter = logging.Formatter(log_fmt)
+        return formatter.format(record)
+
+
+console_handler = logging.StreamHandler(sys.stdout)
+console_handler.setFormatter(LoggerFormatter())
+
+logger = logging.getLogger("app")
+logger.setLevel(logging.INFO)
+logger.addHandler(console_handler)
