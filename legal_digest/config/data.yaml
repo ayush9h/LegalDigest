@@ -1,8 +1,0 @@
-data:
-  raw_dir: "data/raw"
-  processed_dir: "data/processed"
-
-  ipc_csv: "data/raw/IPC.csv"
-  ipc_jsonl: "data/raw/ipc.jsonl"
-
-  processed_train: "data/processed/ipc_train.jsonl"

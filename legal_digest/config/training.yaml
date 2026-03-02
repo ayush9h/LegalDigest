@@ -1,15 +1,18 @@
-training:
-  learning_rate: 1.0e-5           
-  weight_decay: 0.01
-  batch_size: 1
-  grad_accum_steps: 2             
-  num_epochs: 1                   
-  max_length: 512                 
-  fp16: true  
-  bf16: false 
-  save_strategy: "epoch"
-  save_total_limit: 2
+model:
+  name: google/flan-t5-small
+  max_input_length: 256
+  max_target_length: 512
 
-logging:
-  dir: "logs"
-  steps: 10
+training:
+  learning_rate: 0.0003
+  train_batch_size: 8
+  eval_batch_size: 4
+  weight_decay: 0.01
+  num_epochs: 2
+  save_total_limit: 3
+
+data:
+  test_split: 0.25
+
+output:
+  dir: ./results
