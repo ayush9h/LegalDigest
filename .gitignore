@@ -3,3 +3,4 @@ flan-t5-ipc-final/
 __pycache__/
 *.egg-info/
 logs/
+results/
