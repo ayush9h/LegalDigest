@@ -1,3 +1,4 @@
+import torch
 from datasets import load_dataset
 from pipelines.metrics import compute_metrics
 from pipelines.preprocess import preprocess_fn
@@ -17,6 +18,7 @@ MODEL_NAME = config["model"]["name"]
 model = T5ForConditionalGeneration.from_pretrained(MODEL_NAME)
 tokenizer: T5Tokenizer = T5Tokenizer.from_pretrained(MODEL_NAME)
 
+
 data_collator = DataCollatorForSeq2Seq(tokenizer=tokenizer, model=model)
 
 
@@ -31,7 +33,6 @@ def finetune_pipeline():
      - Defining Training arguments
      - Finetuning
     """
-
     TEST_SPLIT = config["data"]["test_split"]
     try:
         logger.info("Loading the dataset")
@@ -68,6 +69,8 @@ def finetune_pipeline():
             num_train_epochs=NUM_EPOCHS,
             predict_with_generate=True,
             push_to_hub=False,
+            dataloader_pin_memory=False,
+            fp16=torch.cuda.is_available(),
         )
 
         logger.info("Finetuning started")
@@ -80,8 +83,8 @@ def finetune_pipeline():
             compute_metrics=compute_metrics,
         )
 
-        logger.info("Finetuning completed")
         trainer.train()
+        logger.info("Finetuning completed")
 
     except Exception as e:
         logger.error(f"Error occured during finetuning due to :{e}")

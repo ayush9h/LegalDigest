@@ -17,12 +17,17 @@ def tokenize_prefix(examples: DatasetDict, tokenizer: T5Tokenizer):
 
     inputs = [prefix + doc for doc in examples["question"]]  # type: ignore
 
-    model_inputs = tokenizer(inputs, max_length=128, truncation=True)
+    model_inputs = tokenizer(
+        inputs, max_length=128, truncation=True, padding="max_length"
+    )
+
+    targets = [str(ans) for ans in examples["answer"]]
 
     labels = tokenizer(
-        text_target=examples["answer"],
+        text_target=targets,
         max_length=512,
         truncation=True,
+        padding="max_length",
     )
 
     model_inputs["labels"] = labels["input_ids"]
