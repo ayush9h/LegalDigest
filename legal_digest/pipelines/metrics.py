@@ -4,42 +4,41 @@ import numpy as np
 from transformers import T5Tokenizer
 
 nltk.download("punkt", quiet=True)
-metric = evaluate.load("rouge")
+rouge_metric = evaluate.load("rouge")
 tokenizer: T5Tokenizer = T5Tokenizer.from_pretrained("google/flan-t5-small")
 
 
 def compute_metrics(eval_preds):
     preds, labels = eval_preds
+    print(preds, labels)
 
-    if isinstance(preds, tuple):
-        preds = preds[0]
-
-    # Convert logits to token IDs
-    if preds.ndim == 3:
-        preds = np.argmax(preds, axis=-1)
-
-    # REPLACING -100: Ensure labels are handled before decoding
-    # We replace -100 with the pad_token_id so the decoder ignores them
-    labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
-
-    # Decode and ensure we handle the tensors correctly
     decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
     decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
-    # ROUGE expectations: newline after every sentence
-    decoded_preds = [
-        "\n".join(nltk.sent_tokenize(pred.strip())) for pred in decoded_preds
-    ]
-    decoded_labels = [
-        "\n".join(nltk.sent_tokenize(label.strip())) for label in decoded_labels
-    ]
+    em = np.mean([p == l for p, l in zip(decoded_preds, decoded_labels)])
 
-    result = metric.compute(
-        predictions=decoded_preds,
-        references=decoded_labels,
-        use_stemmer=True,
+    def compute_f1(pred, label):
+        pred_tokens = pred.split()
+        label_tokens = label.split()
+
+        common = set(pred_tokens) & set(label_tokens)
+
+        if len(common) == 0:
+            return 0
+
+        precision = len(common) / len(pred_tokens)
+        recall = len(common) / len(label_tokens)
+
+        return 2 * precision * recall / (precision + recall)
+
+    f1 = np.mean([compute_f1(p, l) for p, l in zip(decoded_preds, decoded_labels)])
+
+    rouge_result = rouge_metric.compute(
+        predictions=decoded_preds, references=decoded_labels
     )
 
-    # Extract a few results and convert to percentages
-    result = {key: value * 100 for key, value in result.items()}
-    return {k: round(v, 4) for k, v in result.items()}
+    return {
+        "exact_match": em,
+        "f1": f1,
+        "rougeL": rouge_result["rougeL"] if rouge_result else None,
+    }

@@ -1,13 +1,11 @@
-from pipelines.inference import inference
-from pipelines.train import finetune_pipeline
-from utils.logger import logger
+from api.inference import inference_router
+from api.train import train_router
+from fastapi import FastAPI
 
-if __name__ == "__main__":
+app = FastAPI(
+    title="Legal Digest -  Train and Inference",
+    version="0.0.1",
+)
 
-    # logger.info("Starting the Finetuning Pipeline for google/flan-t5-small")
-    # finetune_pipeline()
-
-    # logger.info("Inference model")
-    user_query = input("Enter your query: ")
-    answer = inference("results/checkpoint-383", user_query=user_query)
-    logger.info(f"got the answer:{answer}")
+app.include_router(inference_router, prefix="/api/v1")
+app.include_router(train_router, prefix="/api/v1")
