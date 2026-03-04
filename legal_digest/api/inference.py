@@ -26,7 +26,7 @@ async def inference_model(request: QueryRequest):
         logger.info("Starting the Inferencing Pipeline for google/flan-t5-small")
 
         user_query = request.query
-        answer = inference("results/checkpoint-383", user_query=user_query)
+        answer = inference("ayush9h/legal-digest-flan-t5-small", user_query=user_query)
 
         REQUEST_LATENCY.labels(endpoint="/flan-t5-small").observe(
             time.time() - start,
