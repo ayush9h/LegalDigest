@@ -2,6 +2,8 @@
 
 LegalDigest for legal text understanding, built using **parameter-efficient fine-tuning (LoRA)**. The project focuses on **Indian Penal Code (IPC)** data and supports **both sequence-to-sequence and causal language models**. This repository contains a smaller-scale, reproducible version of the project.
 
+[Finetuned Flan-t5-small HuggingFace Model Card](https://huggingface.co/ayush9h/legal-digest-flan-t5-small)
+
 ---
 ## Training Results
 
