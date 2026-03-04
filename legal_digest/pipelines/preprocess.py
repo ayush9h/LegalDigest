@@ -15,7 +15,7 @@ def tokenize_prefix(examples: DatasetDict, tokenizer: T5Tokenizer):
      - tokenized_data: DatasetDict
     """
 
-    inputs = [prefix + doc for doc in examples["question"]]  # type: ignore
+    inputs = [prefix + str(doc) for doc in examples["question"]]
 
     model_inputs = tokenizer(
         inputs, max_length=128, truncation=True, padding="max_length"
