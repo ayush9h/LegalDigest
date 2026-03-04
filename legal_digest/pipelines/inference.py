@@ -1,5 +1,6 @@
 from transformers import T5ForConditionalGeneration, T5Tokenizer
 
+
 def inference(finetuned_path: str, user_query: str):
 
     finetuned_model = T5ForConditionalGeneration.from_pretrained(finetuned_path)

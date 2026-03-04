@@ -2,7 +2,6 @@ import evaluate
 import nltk
 import numpy as np
 from transformers import T5Tokenizer
-
 from utils.load_yaml_config import load_config
 
 config = load_config("config/training.yaml")
@@ -19,7 +18,7 @@ def compute_metrics(eval_preds):
 
     preds = np.where(preds != -100, preds, tokenizer.pad_token_id)
     labels = np.where(labels != -100, labels, tokenizer.pad_token_id)
-    
+
     decoded_preds = tokenizer.batch_decode(preds, skip_special_tokens=True)
     decoded_labels = tokenizer.batch_decode(labels, skip_special_tokens=True)
 
@@ -49,5 +48,4 @@ def compute_metrics(eval_preds):
         "exact_match": em,
         "f1": f1,
         "rougeL": rouge_result["rougeL"] if rouge_result else None,
-    }
     }
