@@ -71,6 +71,7 @@ def finetune_pipeline():
             push_to_hub=False,
             dataloader_pin_memory=False,
             fp16=torch.cuda.is_available(),
+            hub_model_id="ayush9h/legal-digest-flan-t5-small",
         )
 
         logger.info("Finetuning started")
@@ -85,6 +86,11 @@ def finetune_pipeline():
 
         trainer.train()
         logger.info("Finetuning completed")
+
+        logger.info("Pushing to HUB")
+        model.push_to_hub()
+        tokenizer.push_to_hub("ayush9h/legal-digest-flan-t5-small")
+        logger.info("Pushing to HUB successful")
 
     except Exception as e:
         logger.error(f"Error occured during finetuning due to :{e}")
