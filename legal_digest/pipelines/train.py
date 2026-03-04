@@ -9,6 +9,7 @@ from transformers import (
     T5ForConditionalGeneration,
     T5Tokenizer,
 )
+from utils.hub import push_to_hub
 from utils.load_yaml_config import load_config
 from utils.logger import logger
 
@@ -88,8 +89,10 @@ def finetune_pipeline():
         logger.info("Finetuning completed")
 
         logger.info("Pushing to HUB")
-        model.push_to_hub()
-        tokenizer.push_to_hub("ayush9h/legal-digest-flan-t5-small")
+        push_to_hub(
+            REPO_ID="ayush9h/legal-digest-flan-t5-small",
+            CHECKPOINT_PATH="../inferences/checkpoint-383",
+        )
         logger.info("Pushing to HUB successful")
 
     except Exception as e:
