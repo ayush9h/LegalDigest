@@ -12,6 +12,23 @@ LegalDigest for legal text understanding, built using **parameter-efficient fine
 
 ---
 
+
+## Logging & Monitoring
+
+Model logs are captured in Mlflow.
+
+**Mlflow**
+![MlFlow Dashboard](https://github.com/user-attachments/assets/a4ffb502-bb21-4d96-a46f-1e6b3a56a9e5)
+
+
+Requests logs are monitored through prometheus
+
+**Prometheus**  
+![Prometheus Dashboard](https://github.com/user-attachments/assets/4adc9d1a-4439-4e7b-b042-4865921eff23)
+
+
+---
+
 ## Project Structure
 
 ```
@@ -99,17 +116,4 @@ Runs prometheus on localhost:9090
 ```bash
 docker run -p 9090:9090 -v <promtheus_yml_file_path>:/etc/prometheus/prometheus.yml prom/prometheus
 ```
-
----
-
-## Logging & Monitoring
-
-Model logs are captured in Mlflow.
-**Mlflow**
-![MlFlow Dashboard](https://github.com/user-attachments/assets/4adc9d1a-4439-4e7b-b042-4865921eff23)
-
-
-Requests logs are monitored through prometheus
-**Prometheus**  
-![Prometheus Dashboard](https://github.com/user-attachments/assets/4adc9d1a-4439-4e7b-b042-4865921eff23)
 
