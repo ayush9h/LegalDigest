@@ -82,11 +82,15 @@ source .venv/bin/activate        # Linux / macOS
 pip install -e .
 ```
 
-### 3. Run fastapi application 
+### 3. Run fastapi and mlflow application 
+
+In seperate terminals run the below two commands:
 
 ```bash
 uvicorn main:app --reload
+mlflow server
 ```
+
 
 
 ### 3. Open CMD and run Prometheus through Docker
@@ -100,9 +104,12 @@ docker run -p 9090:9090 -v <promtheus_yml_file_path>:/etc/prometheus/prometheus.
 
 ## Logging & Monitoring
 
-Models logs would be pushed to Huggingface/MLFLow/Weights and Biases.
-Requests logs are monitored through prometheus
+Model logs are captured in Mlflow.
+**Mlflow**
+![MlFlow Dashboard](https://github.com/user-attachments/assets/4adc9d1a-4439-4e7b-b042-4865921eff23)
 
+
+Requests logs are monitored through prometheus
 **Prometheus**  
 ![Prometheus Dashboard](https://github.com/user-attachments/assets/4adc9d1a-4439-4e7b-b042-4865921eff23)
 
