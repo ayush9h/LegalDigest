@@ -2,6 +2,7 @@ import mlflow
 import mlflow.pytorch
 import torch
 from datasets import load_dataset
+from peft import LoraConfig, TaskType, get_peft_model
 from pipelines.metrics import compute_metrics
 from pipelines.preprocess import preprocess_fn
 from transformers import (
@@ -12,7 +13,7 @@ from transformers import (
     T5Tokenizer,
 )
 from utils.flow_utils import init_flow
-from utils.hub import push_to_hub
+from utils.hub import push_hub
 from utils.load_yaml_config import load_config
 from utils.logger import logger
 
@@ -20,6 +21,18 @@ from utils.logger import logger
 config = load_config("config/training.yaml")
 MODEL_NAME = config["model"]["name"]
 model = T5ForConditionalGeneration.from_pretrained(MODEL_NAME)
+
+lora_config = LoraConfig(
+    r=config["lora_config"]["rank"],
+    lora_alpha=config["lora_config"]["lora_alpha"],
+    target_modules=config["lora_config"]["target_modules"],
+    lora_dropout=config["lora_config"]["lora_dropout"],
+    bias="none",
+    task_type=TaskType.SEQ_2_SEQ_LM,
+)
+model = get_peft_model(model, lora_config)
+
+
 tokenizer: T5Tokenizer = T5Tokenizer.from_pretrained(MODEL_NAME)
 
 
@@ -112,9 +125,8 @@ def finetune_pipeline():
             mlflow.log_metrics(metrics)
 
             logger.info("Pushing to HUB")
-            push_to_hub(
+            push_hub(
                 REPO_ID="ayush9h/legal-digest-flan-t5-small",
-                CHECKPOINT_PATH="../inferences/checkpoint-383",
             )
             logger.info("Pushing to HUB successful")
 
